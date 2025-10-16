@@ -49,6 +49,8 @@ type Flags struct {
 	parsers  []parseFlagFunc
 	defaults map[string]defaultFlagFunc
 	list     []*flagItem
+
+	skipCheckArgsAndFlags bool
 }
 
 // empty returns true, if the flags are empty.
@@ -149,6 +151,9 @@ Loop:
 			} else if parsed {
 				continue Loop
 			}
+		}
+		if f.skipCheckArgsAndFlags {
+			break
 		}
 		return nil, fmt.Errorf("invalid flag: %s", a)
 	}

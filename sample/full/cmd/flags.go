@@ -50,7 +50,9 @@ func init() {
 			fmt.Println("uint     ", c.Flags.Uint("uint"))
 			fmt.Println("uint64   ", c.Flags.Uint64("uint64"))
 			fmt.Println("float    ", c.Flags.Float64("float"))
+			fmt.Println(c.Command.GetLineCommand())
 			return nil
 		},
+		SkipCheckArgsAndFlags: true,
 	})
 }

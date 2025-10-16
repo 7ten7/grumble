@@ -238,6 +238,7 @@ func (a *App) addCommand(cmd *Command, addHelpFlag bool) {
 func (a *App) RunCommand(args []string) error {
 	// Parse the arguments string and obtain the command path to the root,
 	// and the command flags.
+	lineCommand := strings.Join(args[1:], " ")
 	cmds, fg, args, err := a.commands.parse(args, a.flagMap, false)
 	if err != nil {
 		return err
@@ -247,7 +248,7 @@ func (a *App) RunCommand(args []string) error {
 
 	// The last command is the final command.
 	cmd := cmds[len(cmds)-1]
-
+	cmd.readLineCommand = lineCommand
 	// Print the command help if the command run function is nil or if the help flag is set.
 	if fg.Bool("help") || cmd.Run == nil {
 		a.printCommandHelp(a, cmd, a.isShell)
@@ -262,7 +263,7 @@ func (a *App) RunCommand(args []string) error {
 	}
 
 	// Check, if values from the argument string are not consumed (and therefore invalid).
-	if len(args) > 0 {
+	if len(args) > 0 && !cmd.SkipCheckArgsAndFlags {
 		return fmt.Errorf("invalid usage of command '%s' (unconsumed input '%s'), try 'help'", cmd.Name, strings.Join(args, " "))
 	}
 

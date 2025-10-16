@@ -1,4 +1,4 @@
-module github.com/desertbit/grumble
+module github.com/7ten7/grumble
 
 go 1.12
 

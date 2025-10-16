@@ -72,6 +72,9 @@ type Command struct {
 	args      Args
 	commands  Commands
 	isBuiltin bool // Whenever this is a build-in command not added by the user.
+
+	SkipCheckArgsAndFlags bool
+	readLineCommand       string
 }
 
 func (c *Command) validate() error {
@@ -89,6 +92,7 @@ func (c *Command) registerFlagsAndArgs(addHelpFlag bool) {
 	if addHelpFlag {
 		// Add default help command.
 		c.flags.Bool("h", "help", false, "display help")
+		c.flags.skipCheckArgsAndFlags = c.SkipCheckArgsAndFlags
 	}
 
 	if c.Flags != nil {
@@ -116,4 +120,8 @@ func (c *Command) AddCommand(cmd *Command) {
 	cmd.registerFlagsAndArgs(true)
 
 	c.commands.Add(cmd)
+}
+
+func (c *Command) GetLineCommand() string {
+	return c.readLineCommand
 }
